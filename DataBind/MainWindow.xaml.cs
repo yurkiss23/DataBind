@@ -77,7 +77,11 @@ namespace DataBind
             {
                 AddUser addUser = new AddUser();
                 addUser.ShowDialog();
-                _context.UsersDB.Add(new User() { Name = addUser.AddName });
+                users.Add(new UserModel() { Name = addUser.AddName });
+                _context.UsersDB.Add(new User()
+                {
+                    Name = users.Where(u => u.Id == 0).First().Name
+                });
                 _context.SaveChanges();
 
                 //using (TransactionScope scope = new TransactionScope())
@@ -138,27 +142,28 @@ namespace DataBind
         
         private void btnDeleteUser_Click(object sender, RoutedEventArgs e)
         {
-            //int delId = (DG.SelectedItem as Users).Id;
+            //int delId = (DG.SelectedItem as UserModel).Id;
             //int deleted = 0;
-            //if (DG.SelectedItem != null)
-            //{
-            //    users.Remove(DG.SelectedItem as Users);
-            //}
-            //try
-            //{
-            //    using (TransactionScope scope = new TransactionScope())
-            //    {
-            //        _connect.Open();
-            //        SqlCommand cmd = new SqlCommand($"DELETE FROM [dbo].[testUsers]WHERE[Id] = {delId}", _connect);
-            //        deleted = cmd.ExecuteNonQuery();
-            //        _connect.Close();
-            //        scope.Complete();
-            //    }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("error");
-            //}
+            if (DG.SelectedItem != null)
+            {
+                users.Remove(DG.SelectedItem as UserModel);
+                MessageBox.Show("delete user(s)");
+            }
+            try
+            {
+                //using (TransactionScope scope = new TransactionScope())
+                //{
+                //    _connect.Open();
+                //    SqlCommand cmd = new SqlCommand($"DELETE FROM [dbo].[testUsers]WHERE[Id] = {delId}", _connect);
+                //    deleted = cmd.ExecuteNonQuery();
+                //    _connect.Close();
+                //    scope.Complete();
+                //}
+            }
+            catch
+            {
+                MessageBox.Show("deleting error");
+            }
             //if (deleted > 0)
             //{
             //    MessageBox.Show("delete user(s)");
