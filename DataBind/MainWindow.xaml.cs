@@ -70,7 +70,18 @@ namespace DataBind
             }
             DG.ItemsSource = users;
         }
-        
+        //public static explicit operator User(UserModel model)
+        //{
+        //    //User res = new User();
+        //    //res.Id = model.Id;
+        //    //res.Name = model.Name;
+        //    return new User
+        //    {
+        //        Id = model.Id,
+        //        Name = model.Name
+        //    };
+        //}
+
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -144,13 +155,24 @@ namespace DataBind
         {
             //int delId = (DG.SelectedItem as UserModel).Id;
             //int deleted = 0;
-            if (DG.SelectedItem != null)
-            {
-                users.Remove(DG.SelectedItem as UserModel);
-                MessageBox.Show("delete user(s)");
-            }
             try
             {
+                if (DG.SelectedItem != null)
+                {
+                    //MessageBox.Show("if");
+
+                    User m = DG.SelectedItem as UserModel;
+                    ////User u = (User)m;
+                    MessageBox.Show(m.Id.ToString()+" "+ m.Name);
+
+
+                    
+
+                    //_context.UsersDB.Remove
+                    _context.SaveChanges();
+                    MessageBox.Show("delete user(s)");
+                }
+
                 //using (TransactionScope scope = new TransactionScope())
                 //{
                 //    _connect.Open();
@@ -172,6 +194,7 @@ namespace DataBind
             //{
             //    MessageBox.Show("delete nothing");
             //}
+            
             DG_Load();
             btnChangeUser.IsEnabled = false;
             btnDeleteUser.IsEnabled = false;
