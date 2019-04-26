@@ -10,32 +10,11 @@ using System.Threading.Tasks;
 namespace DataBind.Entities
 {
     [Table("tblTestUsers")]
-    public class User : INotifyPropertyChanged
+    public class User
     {
         [Key]
         public int Id { get; set; }
-
-        private string name;
         [Required, StringLength(maximumLength: 50)]
-        public string Name
-        {
-            get { return this.name; }
-            set
-            {
-                if (this.name != value)
-                {
-                    this.name = value;
-                    this.NotifyPropertyChanged("Name");
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string propName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-        }
+        public string Name { get; set; }
     }
 }

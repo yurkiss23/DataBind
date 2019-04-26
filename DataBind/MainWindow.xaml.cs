@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DataBind.Entities;
+using DataBind.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,42 +23,51 @@ namespace DataBind
     /// </summary>
     public partial class MainWindow : Window
     {
-        //private ObservableCollection<Users> users = new ObservableCollection<Users>();
+        private EFContext _context;
+        private ObservableCollection<UserModel> users;// = new ObservableCollection<User>();
         public MainWindow()
         {
             InitializeComponent();
+            _context = new EFContext();
 
             DG_Load();
         }
 
         public void DG_Load()
         {
-            //try
-            //{
-            //    using (TransactionScope scope = new TransactionScope())
-            //    {
-            //        List<Users> usersList = new List<Users>();
-            //        _connect.Open();
-            //        SqlCommand cmd = new SqlCommand("SELECT [Id],[Name]FROM[yurkissdb].[dbo].[testUsers]", _connect);
-            //        SqlDataReader rdr = cmd.ExecuteReader();
-            //        while (rdr.Read())
-            //        {
-            //            usersList.Add(new Users
-            //            {
-            //                Id = (int)rdr["Id"],
-            //                Name = rdr["Name"].ToString()
-            //            });
-            //        }
-            //        users = new ObservableCollection<Users>(usersList);
-            //        _connect.Close();
-            //        scope.Complete();
-            //    }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("errors");
-            //}
-            //DG.ItemsSource = users;
+            try
+            {
+                users = new ObservableCollection<UserModel>(
+                    _context.UsersDB.Select(u => new UserModel()
+                    {
+                        Id = u.Id,
+                        Name = u.Name
+                    }).ToList());
+
+                //using (TransactionScope scope = new TransactionScope())
+                //{
+                //    List<Users> usersList = new List<Users>();
+                //    _connect.Open();
+                //    SqlCommand cmd = new SqlCommand("SELECT [Id],[Name]FROM[yurkissdb].[dbo].[testUsers]", _connect);
+                //    SqlDataReader rdr = cmd.ExecuteReader();
+                //    while (rdr.Read())
+                //    {
+                //        usersList.Add(new Users
+                //        {
+                //            Id = (int)rdr["Id"],
+                //            Name = rdr["Name"].ToString()
+                //        });
+                //    }
+                //    users = new ObservableCollection<Users>(usersList);
+                //    _connect.Close();
+                //    scope.Complete();
+                //}
+            }
+            catch
+            {
+                MessageBox.Show("uploading errors");
+            }
+            DG.ItemsSource = users;
         }
         
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
