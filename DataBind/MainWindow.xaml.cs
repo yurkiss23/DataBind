@@ -20,6 +20,7 @@ namespace DataBind
     /// </summary>
     public partial class MainWindow : Window
     {
+        //private ObservableCollection<Users> users = new ObservableCollection<Users>();
         public MainWindow()
         {
             InitializeComponent();
