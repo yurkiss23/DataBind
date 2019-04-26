@@ -1,5 +1,6 @@
 ﻿using DataBind.Entities;
 using DataBind.Models;
+using DataBind.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -72,35 +73,37 @@ namespace DataBind
         
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-            //AddUser addUser = new AddUser();
-            //addUser.ShowDialog();
-            //users.Add(new Users() { Name = addUser.AddName });
-            //try
-            //{
-            //    using (TransactionScope scope = new TransactionScope())
-            //    {
-            //        _connect.Open();
-            //        for (int i = 0; i < users.Count; i++)
-            //        {
-            //            if (users[i].Id != 0)
-            //            {
-            //                SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{users[i].Name}'WHERE [Id] = {users[i].Id}", _connect);
-            //                cmd.ExecuteNonQuery();
-            //            }
-            //            else
-            //            {
-            //                SqlCommand cmd = new SqlCommand($"INSERT INTO [dbo].[testUsers]([Name])VALUES('{users[i].Name}')", _connect);
-            //                cmd.ExecuteNonQuery();
-            //            }
-            //        }
-            //        _connect.Close();
-            //        scope.Complete();
-            //    }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("errors");
-            //}
+            try
+            {
+                AddUser addUser = new AddUser();
+                addUser.ShowDialog();
+                _context.UsersDB.Add(new User() { Name = addUser.AddName });
+                _context.SaveChanges();
+
+                //using (TransactionScope scope = new TransactionScope())
+                //{
+                //    _connect.Open();
+                //    for (int i = 0; i < users.Count; i++)
+                //    {
+                //        if (users[i].Id != 0)
+                //        {
+                //            SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{users[i].Name}'WHERE [Id] = {users[i].Id}", _connect);
+                //            cmd.ExecuteNonQuery();
+                //        }
+                //        else
+                //        {
+                //            SqlCommand cmd = new SqlCommand($"INSERT INTO [dbo].[testUsers]([Name])VALUES('{users[i].Name}')", _connect);
+                //            cmd.ExecuteNonQuery();
+                //        }
+                //    }
+                //    _connect.Close();
+                //    scope.Complete();
+                //}
+            }
+            catch
+            {
+                MessageBox.Show("adding errors");
+            }
             MessageBox.Show($"add user(s)");
             DG_Load();
         }
