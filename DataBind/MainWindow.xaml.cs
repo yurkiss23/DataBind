@@ -125,29 +125,37 @@ namespace DataBind
         
         private void btnChangeUser_Click(object sender, RoutedEventArgs e)
         {
-            //if (DG.SelectedItem != null)
-            //{
-            //    int cngId = (DG.SelectedItem as Users).Id;
-            //    AddUser cngUser = new AddUser();
-            //    cngUser.txtAddName.Text = (DG.SelectedItem as Users).Name;
-            //    cngUser.ShowDialog();
-            //    try
-            //    {
-            //        using (TransactionScope sc = new TransactionScope())
-            //        {
-            //            _connect.Open();
-            //            SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{cngUser.AddName}' WHERE [Id] = {cngId}", _connect);
-            //            cmd.ExecuteNonQuery();
-            //            _connect.Close();
-            //            sc.Complete();
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show("error");
-            //    }
-            //}
-            MessageBox.Show("update user");
+            User cng = null;
+            if (DG.SelectedItem != null)
+            {
+                //int cngId = (DG.SelectedItem as Users).Id;
+                User select = DG.SelectedItem as UserModel;
+                AddUser cngUser = new AddUser();
+                cngUser.txtAddName.Text = select.Name;
+                cngUser.ShowDialog();
+                
+                try
+                {
+                    
+                    cng = _context.UsersDB.Where(u => u.Id == select.Id).First();
+                    cng.Name = cngUser.AddName;
+                    _context.SaveChanges();
+                    MessageBox.Show("update user");
+                    //using (TransactionScope sc = new TransactionScope())
+                    //{
+                    //    _connect.Open();
+                    //    SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{cngUser.AddName}' WHERE [Id] = {cngId}", _connect);
+                    //    cmd.ExecuteNonQuery();
+                    //    _connect.Close();
+                    //    sc.Complete();
+                    //}
+                }
+                catch
+                {
+                    MessageBox.Show("updating error");
+                }
+            }
+            
             DG_Load();
         }
         
@@ -161,14 +169,14 @@ namespace DataBind
                 {
                     //MessageBox.Show("if");
 
-                    User m = DG.SelectedItem as UserModel;
+                    User select = DG.SelectedItem as UserModel;
                     ////User u = (User)m;
-                    MessageBox.Show(m.Id.ToString()+" "+ m.Name);
+                    //MessageBox.Show(m.Id.ToString()+" "+ m.Name);
 
 
-                    
 
-                    //_context.UsersDB.Remove
+
+                    _context.UsersDB.Remove(_context.UsersDB.Where(u => u.Id == select.Id).First());
                     _context.SaveChanges();
                     MessageBox.Show("delete user(s)");
                 }
