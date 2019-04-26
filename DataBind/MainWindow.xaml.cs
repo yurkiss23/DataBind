@@ -25,7 +25,7 @@ namespace DataBind
     public partial class MainWindow : Window
     {
         private EFContext _context;
-        private ObservableCollection<UserModel> users;// = new ObservableCollection<User>();
+        private ObservableCollection<UserModel> users;
         public MainWindow()
         {
             InitializeComponent();
@@ -44,25 +44,6 @@ namespace DataBind
                         Id = u.Id,
                         Name = u.Name
                     }).ToList());
-
-                //using (TransactionScope scope = new TransactionScope())
-                //{
-                //    List<Users> usersList = new List<Users>();
-                //    _connect.Open();
-                //    SqlCommand cmd = new SqlCommand("SELECT [Id],[Name]FROM[yurkissdb].[dbo].[testUsers]", _connect);
-                //    SqlDataReader rdr = cmd.ExecuteReader();
-                //    while (rdr.Read())
-                //    {
-                //        usersList.Add(new Users
-                //        {
-                //            Id = (int)rdr["Id"],
-                //            Name = rdr["Name"].ToString()
-                //        });
-                //    }
-                //    users = new ObservableCollection<Users>(usersList);
-                //    _connect.Close();
-                //    scope.Complete();
-                //}
             }
             catch
             {
@@ -70,17 +51,6 @@ namespace DataBind
             }
             DG.ItemsSource = users;
         }
-        //public static explicit operator User(UserModel model)
-        //{
-        //    //User res = new User();
-        //    //res.Id = model.Id;
-        //    //res.Name = model.Name;
-        //    return new User
-        //    {
-        //        Id = model.Id,
-        //        Name = model.Name
-        //    };
-        //}
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
@@ -94,26 +64,6 @@ namespace DataBind
                     Name = users.Where(u => u.Id == 0).First().Name
                 });
                 _context.SaveChanges();
-
-                //using (TransactionScope scope = new TransactionScope())
-                //{
-                //    _connect.Open();
-                //    for (int i = 0; i < users.Count; i++)
-                //    {
-                //        if (users[i].Id != 0)
-                //        {
-                //            SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{users[i].Name}'WHERE [Id] = {users[i].Id}", _connect);
-                //            cmd.ExecuteNonQuery();
-                //        }
-                //        else
-                //        {
-                //            SqlCommand cmd = new SqlCommand($"INSERT INTO [dbo].[testUsers]([Name])VALUES('{users[i].Name}')", _connect);
-                //            cmd.ExecuteNonQuery();
-                //        }
-                //    }
-                //    _connect.Close();
-                //    scope.Complete();
-                //}
             }
             catch
             {
@@ -128,81 +78,41 @@ namespace DataBind
             User cng = null;
             if (DG.SelectedItem != null)
             {
-                //int cngId = (DG.SelectedItem as Users).Id;
                 User select = DG.SelectedItem as UserModel;
                 AddUser cngUser = new AddUser();
                 cngUser.txtAddName.Text = select.Name;
                 cngUser.ShowDialog();
-                
                 try
                 {
-                    
                     cng = _context.UsersDB.Where(u => u.Id == select.Id).First();
                     cng.Name = cngUser.AddName;
                     _context.SaveChanges();
-                    MessageBox.Show("update user");
-                    //using (TransactionScope sc = new TransactionScope())
-                    //{
-                    //    _connect.Open();
-                    //    SqlCommand cmd = new SqlCommand($"UPDATE [dbo].[testUsers]SET[Name] = '{cngUser.AddName}' WHERE [Id] = {cngId}", _connect);
-                    //    cmd.ExecuteNonQuery();
-                    //    _connect.Close();
-                    //    sc.Complete();
-                    //}
+                    MessageBox.Show("change user");
                 }
                 catch
                 {
-                    MessageBox.Show("updating error");
+                    MessageBox.Show("changing error");
                 }
             }
-            
             DG_Load();
         }
         
         private void btnDeleteUser_Click(object sender, RoutedEventArgs e)
         {
-            //int delId = (DG.SelectedItem as UserModel).Id;
-            //int deleted = 0;
             try
             {
                 if (DG.SelectedItem != null)
                 {
-                    //MessageBox.Show("if");
-
                     User select = DG.SelectedItem as UserModel;
-                    ////User u = (User)m;
-                    //MessageBox.Show(m.Id.ToString()+" "+ m.Name);
-
-
-
-
                     _context.UsersDB.Remove(_context.UsersDB.Where(u => u.Id == select.Id).First());
                     _context.SaveChanges();
                     MessageBox.Show("delete user(s)");
                 }
-
-                //using (TransactionScope scope = new TransactionScope())
-                //{
-                //    _connect.Open();
-                //    SqlCommand cmd = new SqlCommand($"DELETE FROM [dbo].[testUsers]WHERE[Id] = {delId}", _connect);
-                //    deleted = cmd.ExecuteNonQuery();
-                //    _connect.Close();
-                //    scope.Complete();
-                //}
             }
             catch
             {
                 MessageBox.Show("deleting error");
             }
-            //if (deleted > 0)
-            //{
-            //    MessageBox.Show("delete user(s)");
-            //}
-            //else
-            //{
-            //    MessageBox.Show("delete nothing");
-            //}
-            
             DG_Load();
             btnChangeUser.IsEnabled = false;
             btnDeleteUser.IsEnabled = false;
